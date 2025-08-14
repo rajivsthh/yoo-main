@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>सिखNepal • People Directory</title>
+  <meta name="description" content="A responsive, accessible directory of people with search and filters." />
+  <!-- Open Graph (helpful when sharing the page) -->
+  <meta property="og:title" content="सिखNepal • People Directory" />
+  <meta property="og:description" content="Browse mentors and creators from SeekhNepal." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root{
+      --bg:#0b1020;          /* deep navy */
+      --card:#131a33;        /* card background */
+      --muted:#b6bed4;       /* muted text */
+      --text:#eef2ff;        /* main text */
+      --accent:#e11d48;      /* crimson */
+      --accent-2:#1e40af;    /* blue */
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      color:var(--text); background:radial-gradient(1200px 600px at 10% -10%, #1c2548 0%, transparent 60%) , var(--bg);
+    }
+    .wrap{max-width:1100px; margin-inline:auto; padding:28px 20px 56px}
+    header{display:flex; flex-wrap:wrap; align-items:center; gap:14px 18px; justify-content:space-between; margin-bottom:18px}
+    .brand{display:flex; gap:10px; align-items:center}
+    .brand .logo{width:36px; height:36px; border-radius:10px; background:conic-gradient(from 140deg, var(--accent), var(--accent-2));}
+    .brand h1{font-size:20px; margin:0}
+    .tools{display:flex; gap:10px; width:100%; max-width:650px}
+    .tools .field{position:relative; flex:1}
+    .field input,.field select{
+      width:100%; border:1px solid #283056; background:#0f1530; color:var(--text); border-radius:12px; padding:12px 14px; outline:none;
+    }
+    .field label{position:absolute; left:12px; top:-9px; background:var(--bg); padding:0 6px; font-size:12px; color:var(--muted)}
+    .toolbar{display:flex; gap:10px; align-items:center}
+    .toolbar button{
+      border:1px solid #2a3569; background:#0f1530; color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer
+    }
+    .toolbar button[aria-pressed="true"]{outline:2px solid var(--accent)}
+    /* Grid */
+    .grid{
+      display:grid; gap:18px; margin-top:18px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    /* Card */
+    .card{
+      background:linear-gradient(180deg, #141a35, #0f1530); border:1px solid #24315d; border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column;
+    }
+    .banner{aspect-ratio: 16/9; background:#0d142c; position:relative;}
+    .banner img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+    .content{padding:14px}
+    .name{font:600 18px/1.3 inherit; margin:0 0 2px}
+    .meta{color:var(--muted); font-size:13px}
+    .tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
+    .tag{font-size:11px; color:#dbe3ff; background:#1a2347; border:1px solid #2a366a; padding:6px 8px; border-radius:999px}
+    .links{display:flex; gap:10px; margin-top:12px}
+    .links a{color:#c2cffc; text-decoration:none; border:1px solid #2a366a; padding:6px 10px; border-radius:10px}
+    .bio{font-size:14px; color:#dbe3ff; margin-top:8px}
+    footer{margin-top:36px; color:var(--muted); font-size:13px; text-align:center}
+    @media (prefers-reduced-motion:no-preference){
+      .card{transition:transform .18s ease, box-shadow .18s ease}
+      .card:hover{transform:translateY(-4px); box-shadow:0 10px 24px rgba(0,0,0,.25)}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" aria-label="Site brand">
+        <h1>सिखNepal — Mentor Marketplace</h1>
+      </div>
+      <div class="tools" role="search">
+        <div class="field">
+          <label for="q">Search people</label>
+          <input id="q" name="q" type="search" placeholder="Search by name, role, or skill…" autocomplete="off" />
+        </div>
+        <div class="field" style="max-width:200px">
+          <label for="role">Filter by role</label>
+          <select id="role" name="role">
+            <option value="">All roles</option>
+          </select>
+        </div>
+        <div class="toolbar" aria-label="view options">
+          <button id="sortName" aria-pressed="false">Sort A–Z</button>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section aria-labelledby="results-h">
+        <h2 id="results-h" style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden">Directory results</h2>
+        <ul id="grid" class="grid" aria-live="polite"></ul>
+      </section>
+    </main>
+    <footer>
+      <p>Tip: Use the search box to filter by name, role, or skills. This page uses semantic HTML and JSON-LD Person markup for better accessibility and SEO.</p>
+    </footer>
+  </div>
+  <script>
+    // --- Data: add more people here --- //
+    const PEOPLE = [
+      {
+        name: "Maya Shrestha",
+        role: "Digital Painter",
+        image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=60",
+        location: "Kathmandu, Nepal",
+        bio: "Concept artist focusing on Himalayan landscapes and folklore.",
+        skills: ["Procreate", "Photoshop", "Concept Art"],
+        links: { 
+          whatsapp: "https://example.com/aarav", 
+          viber: "viber://chat?number=+9779812345678" // Viber link
+        }
+      },
+      {
+        name: "Aarav Gurung",
+        role: "Illustrator",
+        image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=900&q=60",
+        location: "Pokhara, Nepal",
+        bio: "Children's book illustrator blending modern and traditional motifs.",
+        skills: ["Illustrator", "Clip Studio Paint", "Storyboarding"],
+        links: { 
+          viber: "https://example.com/maya", 
+          instagram: "https://instagram.com/maya",
+           // Phone number link
+        }
+      },
+      {
+        name: "Sagar Thapa",
+        role: "UI Designer",
+        image: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=900&q=60",
+        location: "Lalitpur, Nepal",
+        bio: "Designs calm, legible interfaces for educational apps.",
+        skills: ["Figma", "Accessibility", "Design Systems"],
+        links: { facebook: "https://example.com/sagar", linkedin: "https://linkedin.com/in/sagar" }
+      },
+      {
+        name: "Prerana KC",
+        role: "3D Artist",
+        image: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=900&q=60",
+        location: "Biratnagar, Nepal",
+        bio: "Hard-surface modeling and lighting for short films.",
+        skills: ["Blender", "Substance Painter", "Lighting"],
+        links: { viber: "https://example.com/prerana" }
+      }
+    ];
+    // Populate role filter
+    const roleSelect = document.querySelector('#role');
+    [...new Set(PEOPLE.map(p=>p.role))].sort().forEach(r=>{
+      const opt=document.createElement('option'); opt.value=r; opt.textContent=r; roleSelect.appendChild(opt);
+    });
+    const grid = document.getElementById('grid');
+    const qInput = document.getElementById('q');
+    const sortBtn = document.getElementById('sortName');
+    let sortAZ=false;
+    function render(list){
+      grid.innerHTML='';
+      if(!list.length){ grid.innerHTML = '<li class="meta" role="listitem" style="list-style:none">No results.</li>'; return; }
+      list.forEach((p)=>{
+        const li = document.createElement('li');
+        li.className='card';
+        li.setAttribute('role','listitem');
+        li.innerHTML = `
+          <figure class="banner">
+            <img src="${p.image}" alt="Portrait of ${p.name}" loading="lazy"/>
+          </figure>
+          <div class="content">
+            <h3 class="name">${p.name}</h3>
+            <div class="meta">${p.role} • ${p.location}</div>
+            <p class="bio">${p.bio}</p>
+            <div class="tags">${p.skills.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+            <div class="links">${Object.entries(p.links||{}).map(([k,v])=>`<a href="${v}" target="_blank" rel="noopener">${k}</a>`).join('')}</div>
+          </div>
+        `;
+        grid.appendChild(li);
+      });
+      injectJSONLD(list);
+    }
+    function filter(){
+      const term = qInput.value.trim().toLowerCase();
+      const role = roleSelect.value;
+      let results = PEOPLE.filter(p=>{
+        const hay = [p.name, p.role, p.location, ...(p.skills||[])].join(' ').toLowerCase();
+        const okTerm = !term || hay.includes(term);
+        const okRole = !role || p.role===role;
+        return okTerm && okRole;
+      });
+      if(sortAZ){ results = results.slice().sort((a,b)=>a.name.localeCompare(b.name)); }
+      render(results);
+    }
+    qInput.addEventListener('input', filter);
+    roleSelect.addEventListener('change', filter);
+    sortBtn.addEventListener('click',()=>{ sortAZ=!sortAZ; sortBtn.setAttribute('aria-pressed', String(sortAZ)); filter(); });
+    // JSON-LD Person markup for SEO
+    function injectJSONLD(list){
+      document.querySelectorAll('script[data-jsonld="person"]').forEach(n=>n.remove());
+      list.forEach(p=>{
+        const data = {
+          "@context":"https://schema.org",
+          "@type":"Person",
+          "name": p.name,
+          "jobTitle": p.role,
+          "image": p.image,
+          "address": {"@type":"PostalAddress","addressCountry":"NP"},
+          "description": p.bio,
+          "sameAs": Object.values(p.links||{})
+        };
+        const s = document.createElement('script');
+        s.type='application/ld+json';
+        s.dataset.jsonld='person';
+        s.textContent = JSON.stringify(data);
+        document.body.appendChild(s);
+      });
+    }
+    // Initial render
+    render(PEOPLE);
+  </script>
+</body>
+</html>
